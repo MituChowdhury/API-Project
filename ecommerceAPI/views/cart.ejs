@@ -17,7 +17,7 @@
     <header>
       <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top navi">
         <div class="container">
-          <a class="navbar-brand name" href="index.html">
+          <a class="navbar-brand name" href="home">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1em"
@@ -48,12 +48,12 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="index.html"
+                <a class="nav-link" aria-current="page" href="home"
                   >Home</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="index.html#mn">Books</a>
+                <a class="nav-link" href="home#mn">Books</a>
               </li>
               <li class="nav-item dropdown">
                 <a
@@ -63,10 +63,10 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Hi Tomotu!
+                  Hi <%-user.name%>!
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
                   <li><a class="dropdown-item" href="/orders">Orders</a></li>
                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 </ul>
@@ -78,6 +78,7 @@
     </header>
 
     <main>
+      <%let total = 0%>
       <section class="h-100 h-custom">
         <div class="container py-5 h-100">
           <div
@@ -89,7 +90,7 @@
                   <div class="row">
                     <div class="col-lg-7">
                       <h5 class="mb-3">
-                        <a href="index.html" class="btn btn-dark"
+                        <a href="home" class="btn btn-dark"
                           >Continue shopping</a
                         >
                       </h5>
@@ -103,193 +104,76 @@
                           <p class="mb-0">Book(s) in your cart</p>
                         </div>
                       </div>
-
-                      <div class="card mb-3">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                              <div>
-                                <img
-                                  src="../public/images/odder.jpg"
-                                  class="img-fluid rounded"
-                                  alt="Shopping item"
-                                  style="width: 50px"
-                                />
-                              </div>
-                              <div class="ms-3">
-                                <h5>Odder</h5>
-                                <p class="small mb-0">Katherine Applegate</p>
-                              </div>
-                            </div>
-                            <div class="d-flex flex-row align-items-center">
-                              <h6 class="fw-normal mb-0">Qty:</h6>
-                              <div style="width: 50px">
-                                <input
-                                  type="number"
-                                  name="qty"
-                                  class="qty"
-                                  min="1"
-                                  max="99"
-                                  value="1"
-                                  onkeypress="if(this.value.length == 2) return false;"
-                                />
-                              </div>
-                              <div
-                                class="price"
-                                style="width: 80px; margin-left: 1rem"
-                              >
-                                <span
-                                  class="card-subtitle mb-2 text-body-secondary"
-                                  >BDT</span
-                                >
-                                <span><strong> 400</strong></span>
-                              </div>
-                              <a href="/remove" style="scale: 0.9">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  height="1em"
-                                  viewBox="0 0 448 512"
-                                  class="trash"
-                                >
-                                  <style>
-                                    svg.trash {
-                                      fill: #000000;
-                                    }
-                                  </style>
-                                  <path
-                                    d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"
+                      <%if(cart){
+                        cart.forEach(function(cart){
+                        total += cart.subtotal%>
+                        <div class="card mb-3">
+                          <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                              <div class="d-flex flex-row align-items-center">
+                                <div>
+                                  <img
+                                    src='/images/Odder.jpg'
+                                    class="img-fluid rounded"
+                                    alt="Shopping item"
+                                    style="width: 50px"
                                   />
-                                </svg>
-                              </a>
+                                </div>
+                                <div class="ms-3">
+                                  <h5><%=cart.title%></h5>
+                                  <p class="small mb-0">Katherine Applegate</p>
+                                </div>
+                              </div>
+                              <div class="d-flex flex-row align-items-center">
+                                <h6 class="fw-normal mb-0">Qty:</h6>
+                                <div style="width: 50px">
+                                  <input
+                                    type="number"
+                                    name="qty"
+                                    class="qty"
+                                    min="1"
+                                    max="99"
+                                    value="<%=cart.quantity%>"
+                                    onkeypress="if(this.value.length == 2) return false;"
+                                  />
+                                </div>
+                                <div
+                                  class="price"
+                                  style="width: 80px; margin-left: 1rem"
+                                >
+                                  <span
+                                    class="card-subtitle mb-2 text-body-secondary"
+                                    >BDT</span
+                                  >
+                                  <span><strong><%=cart.subtotal%></strong></span>
+                                </div>
+                                <a href="/remove" style="scale: 0.9">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="1em"
+                                    viewBox="0 0 448 512"
+                                    class="trash"
+                                  >
+                                    <style>
+                                      svg.trash {
+                                        fill: #000000;
+                                      }
+                                    </style>
+                                    <path
+                                      d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"
+                                    />
+                                  </svg>
+                                </a>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                        <% }); }
+                      else{%>
+                        <h1>No items in your cart! Visit <a href="home">books</a> or <a href="orders">orders</a> for more!</h1>
+                      <%}%>
+                    </div> 
 
-                      <div class="card mb-3">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                              <div>
-                                <img
-                                  src="../public/images/odder.jpg"
-                                  class="img-fluid rounded"
-                                  alt="Shopping item"
-                                  style="width: 50px"
-                                />
-                              </div>
-                              <div class="ms-3">
-                                <h5>Odder</h5>
-                                <p class="small mb-0">Katherine Applegate</p>
-                              </div>
-                            </div>
-                            <div class="d-flex flex-row align-items-center">
-                              <h6 class="fw-normal mb-0">Qty:</h6>
-                              <div style="width: 50px">
-                                <input
-                                  type="number"
-                                  name="qty"
-                                  class="qty"
-                                  min="1"
-                                  max="99"
-                                  value="1"
-                                  onkeypress="if(this.value.length == 2) return false;"
-                                />
-                              </div>
-                              <div
-                                class="price"
-                                style="width: 80px; margin-left: 1rem"
-                              >
-                                <span
-                                  class="card-subtitle mb-2 text-body-secondary"
-                                  >BDT</span
-                                >
-                                <span><strong> 400</strong></span>
-                              </div>
-                              <a href="/remove" style="scale: 0.9">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  height="1em"
-                                  viewBox="0 0 448 512"
-                                  class="trash"
-                                >
-                                  <style>
-                                    svg.trash {
-                                      fill: #000000;
-                                    }
-                                  </style>
-                                  <path
-                                    d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"
-                                  />
-                                </svg>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="card mb-3">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                              <div>
-                                <img
-                                  src="../public/images/odder.jpg"
-                                  class="img-fluid rounded"
-                                  alt="Shopping item"
-                                  style="width: 50px"
-                                />
-                              </div>
-                              <div class="ms-3">
-                                <h5>Odder</h5>
-                                <p class="small mb-0">Katherine Applegate</p>
-                              </div>
-                            </div>
-                            <div class="d-flex flex-row align-items-center">
-                              <h6 class="fw-normal mb-0">Qty:</h6>
-                              <div style="width: 50px">
-                                <input
-                                  type="number"
-                                  name="qty"
-                                  class="qty"
-                                  min="1"
-                                  max="99"
-                                  value="1"
-                                  onkeypress="if(this.value.length == 2) return false;"
-                                />
-                              </div>
-                              <div
-                                class="price"
-                                style="width: 80px; margin-left: 1rem"
-                              >
-                                <span
-                                  class="card-subtitle mb-2 text-body-secondary"
-                                  >BDT</span
-                                >
-                                <span><strong> 400</strong></span>
-                              </div>
-                              <a href="/remove" style="scale: 0.9">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  height="1em"
-                                  viewBox="0 0 448 512"
-                                  class="trash"
-                                >
-                                  <style>
-                                    svg.trash {
-                                      fill: #000000;
-                                    }
-                                  </style>
-                                  <path
-                                    d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"
-                                  />
-                                </svg>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                     <div class="col-lg-5">
                       <div class="card bg-dark rounded-3">
                         <div class="card-body">
@@ -366,7 +250,7 @@
                           </a>
 
                           <form
-                            action="/order"
+                            action="/checkout"
                             method="post"
                             class="mt-4"
                             novalidate
@@ -450,6 +334,7 @@
                                 id="floatingAddress"
                                 class="form-control form-control-lg"
                                 placeholder="Address"
+                                name="address"
                                 required
                               />
                               <label for="floatingAddress">Address</label>
@@ -459,21 +344,21 @@
                               class="d-flex justify-content-between text-white"
                             >
                               <p class="mb-2">Subtotal</p>
-                              <p class="mb-2">$4798.00</p>
+                              <p class="mb-2">BDT<%=total%></p>
                             </div>
 
                             <div
                               class="d-flex justify-content-between text-white"
                             >
                               <p class="mb-2">Shipping</p>
-                              <p class="mb-2">$20.00</p>
+                              <p class="mb-2">BDT120.00</p>
                             </div>
 
                             <div
                               class="d-flex justify-content-between mb-4 text-white"
                             >
                               <p class="mb-2">Total(Incl. taxes)</p>
-                              <p class="mb-2">$4818.00</p>
+                              <p class="mb-2">BDT<%=total+170%></p>
                             </div>
 
                             <div class="d-flex">

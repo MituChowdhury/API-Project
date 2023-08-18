@@ -42,11 +42,12 @@ app.post("/register", (req,res)=>{
 
     const values = [
         req.body.bankuid,
+        req.body.name,
         req.body.email,
         req.body.password
     ]
 
-    const q = 'INSERT INTO users (bankuid, email, password) VALUES (?)'
+    const q = 'INSERT INTO users (bankuid, name, email, password) VALUES (?)'
     
     db.query(q, [values], (err,data)=>{
         if(err) res.json(err)

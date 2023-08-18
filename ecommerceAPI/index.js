@@ -89,25 +89,43 @@ app.get("/register", (req,res)=>{
 
 app.post("/register", (req,res)=>{
 
-    const values = [
-        req.body.name,
-        req.body.email,
-        req.body.password
-    ]
-    //console.log(values)
-    const q = 'INSERT INTO users (name, email, password) VALUES (?)'
-    db.query(q, [values], (err,data)=>{
+    const { name, email, password } = req.body
+    const q = `INSERT INTO users (name, email, password) VALUES ('${name}','${email}','${password}')`
+    db.query(q, (err,data)=>{
         if(err) res.json(err)
         else {
-            // bank uid reg korte hbe
+            const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
 
-            res.json('account creation successful')
+            db.query(q, (err,data)=>{
+                if(err) res.json('Wrong login credentials!')
+                else {
+                    req.session.user = data[0]
+                    res.render('bank_uid', {user:req.session.user})
+                }
+            })
         }
+            
     })
 })
 
+app.post("/bankRegister", (req,res)=>{
+    axios.post('http://localhost:3000/register', {
+        bankuid: req.body.bankuid,
+        name: req.session.user.name,
+        email: req.session.user.email,
+        password: req.body.password
+      })
+      .then(function (response) {
+        console.log('success!');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    res.redirect('home')
+})
+
 app.get("/admin_login", (req,res)=>{
-    //if(req.session.user) res.redirect('home')
+    if(req.session.user && !req.session.user.isAdmin) res.redirect('home')
     res.render('admin_login', {user:req.session.user})
 })
 
@@ -150,7 +168,7 @@ app.post('/addToCart', (req,res)=>{
             subtotal : subtotal
         })
 
-        res.redirect('home');
+        res.redirect('home#mn');
     }
 });
 
@@ -161,7 +179,7 @@ app.get("/cart", (req,res)=>{
     else res.render('cart', {user:req.session.user, cart:req.session.cart})
 })
 
-app.get("/decreaseQuantity", (req,res)=>{
+app.post("/decreaseQuantity", (req,res)=>{
     if(!req.session.user){
         res.redirect('login')
     }
@@ -179,7 +197,7 @@ app.get("/decreaseQuantity", (req,res)=>{
     }
 })
 
-app.get("/increaseQuantity", (req,res)=>{
+app.post("/increaseQuantity", (req,res)=>{
     if(!req.session.user){
         res.redirect('login')
     }
@@ -202,7 +220,7 @@ app.get("/orders", (req,res)=>{
         res.redirect('login')
     }
     else{
-        const q = `SELECT * FROM orders WHERE id = ${req.session.user.id}`;
+        const q = `SELECT * FROM orders WHERE user_id = ${req.session.user.id}`;
     
         db.query(q, (err, data)=>{
             if(err) return res.json(err)
@@ -214,46 +232,41 @@ app.get("/orders", (req,res)=>{
 })
 
 app.post("/checkout", (req,res)=>{
-    if(!req.session.user){
-        res.redirect('login')
+    
+    let description = '';
+    let price_breakdown = '';        
+    let total = 0; 
+    for(let i=0;i<req.session.cart.length;i++) {
+
+        description += req.session.cart[i].quantity + ' x ' + req.session.cart[i].title
+        if(i < req.session.cart.length-1) description += ', '
+
+        price_breakdown += req.session.cart[i].subtotal
+        if(i < req.session.cart.length-1) price_breakdown += ' + '
+
+        total += req.session.cart[i].subtotal
+
     }
-    else {
-        let description = '';
-        let price_breakdown = '';
-        let total = 0; 
-        for(let i=0;i<req.session.cart.length;i++) {
+    req.session.cart = [];
 
-            description += req.session.cart[i].quantity + ' x ' + req.session.cart[i].title
-            if(i < req.session.cart.length-1) description += ', '
+    const q1 = "INSERT INTO orders (user_id, description, price_breakdown, total, createdAt, address, status) VALUES (?)";
 
-            price_breakdown += req.session.cart[i].subtotal
-            if(i < req.session.cart.length-1) price_breakdown += ' + '
+    const values = [
+        req.session.user.id,
+        description,
+        price_breakdown,
+        total,
+        new Date().toLocaleString(),
+        req.body.address,
+        'placed',
+    ];
 
-            total += req.session.cart[i].subtotal
-
+    db.query(q1, [values], (err, data)=>{
+        if(err) res.json(err)
+        else{
+            res.redirect('orders')
         }
-        req.session.cart = [];
-
-        const q1 = "INSERT INTO orders (customer_id, description, price_breakdown, total, createdAt, address, status) VALUES (?)";
-
-        const values = [
-            req.session.user.id,
-            req.body.table_no,
-            description,
-            price_breakdown,
-            total,
-            new Date().toLocaleString(),
-            req.body.address,
-            'placed',
-        ];
-
-        db.query(q1, [values], (err, data)=>{
-            if(err) res.json(err)
-            else{
-                res.redirect('orders')
-            }
-        })
-    }
+    })
 })
 
 app.get("/logout", (req,res)=>{

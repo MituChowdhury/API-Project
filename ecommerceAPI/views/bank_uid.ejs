@@ -51,15 +51,15 @@
                 <a
                   class="nav-link btn disabled"
                   aria-current="page"
-                  href="index.html"
+                  href="home"
                   >Home</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link btn disabled" href="index.html#mn">Books</a>
+                <a class="nav-link btn disabled" href="home#mn">Books</a>
               </li>
               <li>
-                <a class="nav-link btn disabled" href="cart.html">
+                <a class="nav-link btn disabled" href="cart">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="1em"
@@ -85,7 +85,7 @@
 
     <main>
       <div class="login">
-        <form action="/bank_uid" method="post" novalidate class="buid">
+        <form action="/bankRegister" method="post" novalidate class="buid">
           <svg
             class="logsvg"
             xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +108,7 @@
               class="form-control"
               id="floatingInput"
               placeholder="numberInput"
-              name="uid"
+              name="bankuid"
               min="1111111111111111"
               max="9999999999999999"
               onkeypress="if(this.value.length == 16) return false;"
@@ -118,6 +118,7 @@
           </div>
           <div class="form-floating inp">
             <input
+              name="password"
               type="password"
               class="form-control"
               id="floatingPassword"
