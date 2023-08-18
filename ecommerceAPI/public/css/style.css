@@ -64,6 +64,10 @@ body {
   align-items: center;
 }
 
+.login .buid {
+  width: 40%;
+}
+
 .login form .logsvg {
   fill: #000000;
   scale: 2;
