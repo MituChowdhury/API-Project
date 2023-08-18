@@ -2,6 +2,8 @@ import express from "express"
 import mysql from "mysql"
 import bodyparser from "body-parser"
 import session from "express-session"
+import bcrypt from "bcryptjs"
+import axios from 'axios'
 
 const app = express()
 
@@ -30,22 +32,234 @@ app.use(session({
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-
-// const sql = "SELECT * FROM menu";
-// const m = [];    
-// db.query(sql, (err, data)=>{
-
-// 	if(err) return res.json(err) 
-// 	else { 
-//         m = data;
-//     }
-// })
-
-// console.log(m);
-
 app.get("/", (req,res)=>{
+    //res.json("hello this is ecommerce backend :)")
+    res.redirect('home')
+})
+
+app.get("/home", (req,res)=>{
+    res.render('home', {user:req.session.user})
+})
+
+app.get("/login", (req,res)=>{
+    if(!req.session.user) res.render('login', {user:req.session.user})
+    else res.redirect('home')
+})
+
+app.post("/login", (req,res)=>{
     
-    res.json("hello this is ecommerce backend :)")
+    const { email, password } = req.body
+
+    const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
+
+    db.query(q, (err,data)=>{
+        if(err) res.json('Wrong login credentials!')
+        else{
+            const passwordMatch = bcrypt.compare(password, data[0].password);
+
+            if(!passwordMatch) res.json('Wrong password!')
+
+            else{
+                req.session.user = data[0]
+
+                axios.get(`http://localhost:3000/getUID?email=${email}`)
+                .then(function (response) {
+                    // handle success
+                    req.session.user.uid = response.data
+                    console.log(response.data);
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+                .finally(function () {
+                    // always executed
+                });
+
+                res.redirect('home')
+            }
+        }
+    })
+})
+
+app.get("/register", (req,res)=>{
+    if(req.session.user) res.redirect('home')
+    else res.render('register', {user:req.session.user})
+})
+
+app.post("/register", (req,res)=>{
+
+    const values = [
+        req.body.name,
+        req.body.email,
+        req.body.password
+    ]
+    //console.log(values)
+    const q = 'INSERT INTO users (name, email, password) VALUES (?)'
+    db.query(q, [values], (err,data)=>{
+        if(err) res.json(err)
+        else {
+            // bank uid reg korte hbe
+
+            res.json('account creation successful')
+        }
+    })
+})
+
+app.get("/admin_login", (req,res)=>{
+    //if(req.session.user) res.redirect('home')
+    res.render('admin_login', {user:req.session.user})
+})
+
+app.post("/admin_login", (req,res)=>{
+    if(req.session.user && !req.session.user.isAdmin) res.redirect('home')
+    else{
+        const { email, password } = req.body
+        const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
+
+        db.query(q, (err,data)=>{
+            if(err) res.json('Wrong login credentials!')
+            else{
+                if(!data[0].isAdmin) res.json('Not an admin.')
+                else{
+                    req.session.user = data[0]
+                    res.redirect('home') // edit
+                }
+            }
+        })
+    }
+})
+
+app.post('/addToCart', (req,res)=>{
+
+    if(!req.session.user){
+        res.redirect('login')
+    }
+    else{
+
+        if(!req.session.cart){
+            req.session.cart = []
+        }
+        const {title, price, quantity} = req.body
+        const subtotal = parseFloat(price) * parseInt(quantity)
+    
+        req.session.cart.push({
+            title : title,
+            price : price,
+            quantity : quantity,
+            subtotal : subtotal
+        })
+
+        res.redirect('home');
+    }
+});
+
+app.get("/cart", (req,res)=>{
+    if(!req.session.user){
+        res.redirect('login')
+    }
+    else res.render('cart', {user:req.session.user, cart:req.session.cart})
+})
+
+app.get("/decreaseQuantity", (req,res)=>{
+    if(!req.session.user){
+        res.redirect('login')
+    }
+    else{
+
+        for(let i=0;i<req.session.cart.length;i++) {
+
+            if(req.session.cart[i].title === req.body.title) {
+                req.session.cart[i].quantity--
+                req.session.cart[i].subtotal -= req.session.cart[i].price
+                break;
+            }
+         }
+         res.redirect('cart')
+    }
+})
+
+app.get("/increaseQuantity", (req,res)=>{
+    if(!req.session.user){
+        res.redirect('login')
+    }
+    else{
+
+        for(let i=0;i<req.session.cart.length;i++) {
+
+            if(req.session.cart[i].title === req.body.title) {
+                req.session.cart[i].quantity++
+                req.session.cart[i].subtotal += req.session.cart[i].price
+                break;
+            }
+         }
+         res.redirect('cart')
+    }
+})
+
+app.get("/orders", (req,res)=>{
+    if(!req.session.user){
+        res.redirect('login')
+    }
+    else{
+        const q = `SELECT * FROM orders WHERE id = ${req.session.user.id}`;
+    
+        db.query(q, (err, data)=>{
+            if(err) return res.json(err)
+            else {
+                res.render('orders', {user: req.session.user, data:data})
+            } 
+        })
+    }
+})
+
+app.post("/checkout", (req,res)=>{
+    if(!req.session.user){
+        res.redirect('login')
+    }
+    else {
+        let description = '';
+        let price_breakdown = '';
+        let total = 0; 
+        for(let i=0;i<req.session.cart.length;i++) {
+
+            description += req.session.cart[i].quantity + ' x ' + req.session.cart[i].title
+            if(i < req.session.cart.length-1) description += ', '
+
+            price_breakdown += req.session.cart[i].subtotal
+            if(i < req.session.cart.length-1) price_breakdown += ' + '
+
+            total += req.session.cart[i].subtotal
+
+        }
+        req.session.cart = [];
+
+        const q1 = "INSERT INTO orders (customer_id, description, price_breakdown, total, createdAt, address, status) VALUES (?)";
+
+        const values = [
+            req.session.user.id,
+            req.body.table_no,
+            description,
+            price_breakdown,
+            total,
+            new Date().toLocaleString(),
+            req.body.address,
+            'placed',
+        ];
+
+        db.query(q1, [values], (err, data)=>{
+            if(err) res.json(err)
+            else{
+                res.redirect('orders')
+            }
+        })
+    }
+})
+
+app.get("/logout", (req,res)=>{
+    console.log(req.session.cart)
+    req.session.destroy();
+    res.redirect('home')
 })
 
 app.listen(3001, ()=>{
