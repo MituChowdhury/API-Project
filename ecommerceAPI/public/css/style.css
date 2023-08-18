@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Bangers&display=swap");
+
+body {
+  margin-top: 66px;
+}
+
+.navi {
+  padding-bottom: 0;
+}
+
+.name {
+  font-family: "Bangers", cursive;
+  font-size: 2rem;
+}
+
+.pad {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+#mn {
+  margin: auto;
+  width: 75%;
+}
+
+#mn h1 {
+  text-align: center;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.hrule {
+  margin: 0.25rem auto;
+}
+
+.qty {
+  margin-left: 0.2rem;
+  font-size: 1rem;
+  border: 0.1rem solid #f1f1f1;
+  border-radius: 0.25rem;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+  width: 2.75rem;
+}
+
+.add {
+  margin-left: auto;
+}
+
+.login {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login form {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login form .logsvg {
+  fill: #000000;
+  scale: 2;
+}
+
+.login form h3 {
+  margin: 0.5rem 0 1rem 0;
+}
+
+.login form .inp,
+.login form button {
+  width: 100%;
+}
+
+.login form .confirm {
+  margin-top: 1rem;
+}
+
+.login form button {
+  margin: 1rem auto;
+}
+
+.login form p a {
+  text-decoration: none;
+  font-weight: bold;
+}
