@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Geo&display=swap');
+
+body {
+  margin-top: 66px;
+}
+
+.navi {
+  padding-bottom: 0;
+}
+
+.name {
+  
+  font-family: 'Geo', sans-serif;
+  font-size: 2rem;
+}
+
+.login {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login form {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login form h3 {
+  margin: 0.5rem 0 1rem 0;
+}
+
+.login form .inp,
+.login form button {
+  width: 100%;
+}
+
+.login form button {
+  margin: 1rem auto;
+}

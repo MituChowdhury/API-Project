@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Orders</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top navi">
+        <div class="container">
+          <a class="navbar-brand name" href="index.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 576 512"
+            >
+              <style>
+                svg {
+                  fill: #ffffff;
+                }
+              </style>
+              <path
+                d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z"
+              />
+            </svg>
+            TURN THE PAGE
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="index.html"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="index.html#mn">Books</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="cart.html">Cart</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Hi Tomotu!
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <li><a class="dropdown-item" href="/orders">Orders</a></li>
+                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="container my-5">
+        <h1 style="text-align: center; padding: 1rem">My order history</h1>
+        <div
+          class="d-md-flex d-none justify-content-md-between justify-content-sm-center align-content-center border-bottom border-2 my-2 bg-dark text-light p-3 rounded-3"
+        >
+          <div class="col-3 align-self-center">
+            <h1 class="h5 fw-bold text-center">Order Info</h1>
+          </div>
+          <div class="col-3 align-self-center">
+            <h1 class="h5 fw-bold text-center">Shipping Info</h1>
+          </div>
+          <div class="col-4 align-self-center">
+            <h1 class="h5 fw-bold text-center">Items ordered</h1>
+          </div>
+          <div class="col-2 align-self-center">
+            <h1 class="h5 fw-bold text-center">Order Status</h1>
+          </div>
+        </div>
+        <div
+          class="d-md-flex d-sm-block justify-content-md-between justify-content-sm-center text-center border-bottom border-2 my-2 bg-light p-2 rounded-3"
+        >
+          <div class="col-md-3 text-sm-center align-self-center my-2">
+            <h1 class="h6">Order ID: 2F456DA</h1>
+            <h1 class="h6">Date: 19/08/2023</h1>
+            <h1 class="h6">Order Amount: BDT 5000</h1>
+          </div>
+
+          <div class="col-md-3 text-sm-center align-self-center my-2">
+            <h1 class="h6">Name: Mitu Chowdhury</h1>
+            <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1>
+            <h1 class="h6">
+              Address: First Ladies Hall, SUST, Akhalia, Sylhet
+            </h1>
+          </div>
+
+          <div class="col-md-4 text-sm-center align-self-center my-2">
+            <h1 class="h6">
+              1 x Doctor Jekyll and Mr. Hyde, 2 x Harry Potter and the Half
+              Blood Prince, 3 x Rita Hayworth and Shawshank Redemption
+            </h1>
+          </div>
+
+          <div class="col-md-2 text-sm-center align-self-center my-2">
+            <h1 class="h6 text-success">Delivered</h1>
+          </div>
+        </div>
+
+        <div
+          class="d-md-flex d-sm-block justify-content-md-between justify-content-sm-center text-center border-bottom border-2 my-2 bg-light p-2 rounded-3"
+        >
+          <div class="col-md-3 text-sm-center align-self-center my-2">
+            <h1 class="h6">Order ID: 2F456DA</h1>
+            <h1 class="h6">Date: 19/08/2023</h1>
+            <h1 class="h6">Order Amount: BDT 5000</h1>
+          </div>
+
+          <div class="col-md-3 text-sm-center align-self-center my-2">
+            <h1 class="h6">Name: Mitu Chowdhury</h1>
+            <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1>
+            <h1 class="h6">
+              Address: First Ladies Hall, SUST, Akhalia, Sylhet
+            </h1>
+          </div>
+
+          <div class="col-md-4 text-sm-center align-self-center my-2">
+            <h1 class="h6">
+              1 x Doctor Jekyll and Mr. Hyde, 2 x Harry Potter and the Half
+              Blood Prince, 3 x Rita Hayworth and Shawshank Redemption
+            </h1>
+          </div>
+
+          <div class="col-md-2 text-sm-center align-self-center my-2">
+            <h1 class="h6 text-primary">Under shipping</h1>
+          </div>
+        </div>
+
+        <div
+          class="d-md-flex d-sm-block justify-content-md-between justify-content-sm-center text-center border-bottom border-2 my-2 bg-light p-2 rounded-3"
+        >
+          <div class="col-md-3 text-sm-center align-self-center my-2">
+            <h1 class="h6">Order ID: 2F456DA</h1>
+            <h1 class="h6">Date: 19/08/2023</h1>
+            <h1 class="h6">Order Amount: BDT 5000</h1>
+          </div>
+
+          <div class="col-md-3 text-sm-center align-self-center my-2">
+            <h1 class="h6">Name: Mitu Chowdhury</h1>
+            <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1>
+            <h1 class="h6">
+              Address: First Ladies Hall, SUST, Akhalia, Sylhet
+            </h1>
+          </div>
+
+          <div class="col-md-4 text-sm-center align-self-center my-2">
+            <h1 class="h6">
+              1 x Doctor Jekyll and Mr. Hyde, 2 x Harry Potter and the Half
+              Blood Prince, 3 x Rita Hayworth and Shawshank Redemption
+            </h1>
+          </div>
+
+          <div class="col-md-2 text-sm-center align-self-center my-2">
+            <h1 class="h6 text-warning">Processing</h1>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
