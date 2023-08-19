@@ -55,6 +55,15 @@ app.post("/register", (req,res)=>{
     })
 })
 
+app.get("/login", (req,res)=>{
+    if(req.session.user){
+        res.redirect('profile')
+    }
+    else{
+        res.redirect('login')
+    }
+})
+
 app.post("/login", (req,res)=>{
     
     const { email, password } = req.body
@@ -68,10 +77,24 @@ app.post("/login", (req,res)=>{
             const hashedPassword1 = bcrypt.hash(data[0].password, 12)
             if(hashedPassword === hashedPassword1){
                 req.session.user = data[0]
+                res.redirect('profile')
             }
             else res.json('Wrong password!')
         }
     })
+})
+
+app.get("/profile", (req,res)=>{
+    if(!req.session.user){
+        res.redirect('login')
+    }
+    else{
+        const q = `SELECT * FROM users WHERE email = '${req.session.user.email}'`
+        db.query(q, (err,data)=>{
+            if(err) console.log('error')
+            else res.render('profile', {user:req.session.user, data:data} )
+        })
+    }
 })
 
 app.get("/getUID", (req,res)=>{
@@ -83,9 +106,10 @@ app.get("/getUID", (req,res)=>{
 })
 
 app.post("/updateBalance", (req,res)=>{
-    console.log(req.query)
+    console.log(req.body)
     const {email, ammount} = req.body
-    const q = `UPDATE users SET ammount = ammount-${ammount} FROM users WHERE email = '${email}'`;
+    const q = `UPDATE users SET ammount = ammount+(${ammount}) WHERE email = '${email}'`;
+    console.log(q)
     db.query(q, (err,data)=>{
         if(err) console.log('error');
         else{
@@ -94,20 +118,6 @@ app.post("/updateBalance", (req,res)=>{
         }
     })
 })
-
-
-// app.get("/test", (req,res)=>{
-    // console.log(req.query.item)
-    // const q = `select * from menu where title = '${req.query.item}'`;
-    // db.query(q, (err,data)=>{
-    //     if(err) console.log('error');
-    //     else{
-    //        // console.log(data)
-    //         ///return data;
-    //         res.send(data)
-    //     }
-    // })
-// })
 
 app.listen(3000, ()=>{
     console.log("Connected to bank backend!")

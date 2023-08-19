@@ -55,7 +55,7 @@ app.post("/login", (req,res)=>{
     db.query(q, (err,data)=>{
         if(err) res.json('Wrong login credentials!')
         else{
-            const passwordMatch = bcrypt.compare(password, data[0].password);
+            const passwordMatch = bcrypt.compare(password, data[0].password);   //// hashed pass database e store korte hobe
 
             if(!passwordMatch) res.json('Wrong password!')
 
@@ -148,6 +148,47 @@ app.post("/admin_login", (req,res)=>{
     }
 })
 
+app.post('/confirmOrder', (req,res)=>{
+    axios.post('http://localhost:3000/updateBalance', {
+        email: 'admin@gmail.com',
+        ammount: -req.body.total
+    })
+    .then(function (response) {
+        console.log('successful transaction from admin!');
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+    axios.post('http://localhost:3000/updateBalance', {
+        email: 'supplier@gmail.com',
+        ammount: req.body.total
+    })
+    .then(function (response) {
+        console.log('successful transaction to supplier!');
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+    const q = `UPDATE orders SET status = 'Under Shipping' WHERE id = ${req.body.id}`
+    db.query(q, (err, data)=>{
+        if(err) return res.json(err)
+        else res.redirect('allOrders')
+    })
+})
+
+app.post('/changeOrderStatus', (req,res)=>{
+    const id = req.body.id
+    const status = req.body.status
+    
+    const q = `UPDATE orders SET status = '${status}' WHERE id = ${id}`
+    db.query(q, (err, data)=>{
+        if(err) return res.json(err)
+        else res.send(data)
+    })
+})
+
 app.post('/addToCart', (req,res)=>{
 
     if(!req.session.user){
@@ -179,7 +220,7 @@ app.get("/cart", (req,res)=>{
     else res.render('cart', {user:req.session.user, cart:req.session.cart})
 })
 
-app.post("/decreaseQuantity", (req,res)=>{
+app.post("/changeQuantity", (req,res)=>{
     if(!req.session.user){
         res.redirect('login')
     }
@@ -188,36 +229,46 @@ app.post("/decreaseQuantity", (req,res)=>{
         for(let i=0;i<req.session.cart.length;i++) {
 
             if(req.session.cart[i].title === req.body.title) {
-                req.session.cart[i].quantity--
-                req.session.cart[i].subtotal -= req.session.cart[i].price
-                break;
+                if(req.body.op === 'decrease' && req.session.cart[i].quantity>1) {
+                    req.session.cart[i].quantity--
+                    req.session.cart[i].subtotal = parseInt(req.session.cart[i].subtotal) - parseInt(req.session.cart[i].price)
+                    break;
+                }
+                else{
+                    req.session.cart[i].quantity++
+                    req.session.cart[i].subtotal = parseInt(req.session.cart[i].subtotal) + parseInt(req.session.cart[i].price)
+                    break;
+                }
             }
          }
-         res.redirect('cart')
+         res.render('cart', {user:req.session.user, cart:req.session.cart})
     }
 })
 
-app.post("/increaseQuantity", (req,res)=>{
-    if(!req.session.user){
-        res.redirect('login')
-    }
-    else{
+// app.post("/increaseQuantity", (req,res)=>{
+//     if(!req.session.user){
+//         res.redirect('login')
+//     }
+//     else{
 
-        for(let i=0;i<req.session.cart.length;i++) {
+//         for(let i=0;i<req.session.cart.length;i++) {
 
-            if(req.session.cart[i].title === req.body.title) {
-                req.session.cart[i].quantity++
-                req.session.cart[i].subtotal += req.session.cart[i].price
-                break;
-            }
-         }
-         res.redirect('cart')
-    }
-})
+//             if(req.session.cart[i].title === req.body.title) {
+//                 req.session.cart[i].quantity++
+//                 req.session.cart[i].subtotal += req.session.cart[i].price
+//                 break;
+//             }
+//          }
+//          res.redirect('cart')
+//     }
+// })
 
 app.get("/orders", (req,res)=>{
     if(!req.session.user){
         res.redirect('login')
+    }
+    else if(req.session.user.isAdmin){
+        res.redirect('allOrders')
     }
     else{
         const q = `SELECT * FROM orders WHERE user_id = ${req.session.user.id}`;
@@ -229,6 +280,20 @@ app.get("/orders", (req,res)=>{
             } 
         })
     }
+})
+
+// for admin
+app.get("/allOrders", (req,res)=>{
+    let q = ''
+    if(req.session.user && req.session.user.isAdmin) q = `SELECT * FROM orders`;
+    else q = `SELECT * FROM orders WHERE status != 'placed'`;
+    db.query(q, (err, data)=>{
+        if(err) return res.json(err)
+        else {
+            if(req.session.user && req.session.user.isAdmin) res.render('orders', {user: req.session.user, data:data})
+            else res.send(data)
+        } 
+    })
 })
 
 app.post("/checkout", (req,res)=>{
@@ -249,10 +314,11 @@ app.post("/checkout", (req,res)=>{
     }
     req.session.cart = [];
 
-    const q1 = "INSERT INTO orders (user_id, description, price_breakdown, total, createdAt, address, status) VALUES (?)";
+    const q1 = "INSERT INTO orders (user_id, user_name, description, price_breakdown, total, createdAt, address, status) VALUES (?)";
 
     const values = [
         req.session.user.id,
+        req.session.user.name,
         description,
         price_breakdown,
         total,
@@ -264,6 +330,30 @@ app.post("/checkout", (req,res)=>{
     db.query(q1, [values], (err, data)=>{
         if(err) res.json(err)
         else{
+            axios.post('http://localhost:3000/updateBalance', {
+                bankuid: req.body.bankuid,
+                name: req.session.user.name,
+                email: req.session.user.email,
+                password: req.body.password,
+                ammount: -total
+            })
+            .then(function (response) {
+                console.log('successful transaction from user!');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+            axios.post('http://localhost:3000/updateBalance', {
+                email: 'admin@gmail.com',
+                ammount: total
+            })
+            .then(function (response) {
+                console.log('successful transaction to admin!');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
             res.redirect('orders')
         }
     })
