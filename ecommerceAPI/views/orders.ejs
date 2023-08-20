@@ -48,9 +48,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="home"
-                  >Home</a
-                >
+                <a class="nav-link" aria-current="page" href="home">Home</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="home#mn">Books</a>
@@ -68,7 +66,9 @@
                 <ul class="dropdown-menu">
                   <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
                   <li><a class="dropdown-item" href="/cart">Your cart</a></li>
-                  <li><a class="dropdown-item" href="/orders">Order history</a></li>
+                  <li>
+                    <a class="dropdown-item" href="/orders">Order history</a>
+                  </li>
                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 </ul>
               </li>
@@ -81,7 +81,7 @@
     <main>
       <div class="container my-5">
         <%if(data.length > 0){%>
-        <h1 style="text-align: center; padding: 1rem">My order history</h1>
+        <h1 style="text-align: center; padding: 2rem">My order history</h1>
         <div
           class="d-md-flex d-none justify-content-md-between justify-content-sm-center align-content-center border-bottom border-2 my-2 bg-dark text-light p-3 rounded-3"
         >
@@ -111,29 +111,28 @@
           <div class="col-md-3 text-sm-center align-self-center my-2">
             <h1 class="h6">Name: <%=data.user_name%></h1>
             <!-- <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1> -->
-            <h1 class="h6">
-              Address: <%=data.address%>
-            </h1>
+            <h1 class="h6">Address: <%=data.address%></h1>
           </div>
 
           <div class="col-md-4 text-sm-center align-self-center my-2">
-            <h1 class="h6">
-              <%=data.description%>
-            </h1>
+            <h1 class="h6"><%=data.description%></h1>
           </div>
 
           <div class="col-md-2 text-sm-center align-self-center my-2">
             <%if(data.status === 'Processing') {%>
             <h1 class="h6 text-warning"><%=data.status%></h1>
             <%} else if(data.status === 'Under Shipping') {%>
-              <h1 class="h6 text-primary"><%=data.status%></h1>
+            <h1 class="h6 text-primary"><%=data.status%></h1>
             <%} else {%>
-              <h1 class="h6 text-success"><%=data.status%></h1>
+            <h1 class="h6 text-success"><%=data.status%></h1>
             <%}%>
           </div>
         </div>
-        <%}); }%>
-
+        <%}); } else {%>
+        <h1 class="text-muted" style="text-align: center; padding: 2rem">
+          No orders placed yet
+        </h1>
+        <%}%>
       </div>
     </main>
 

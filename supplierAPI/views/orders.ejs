@@ -65,7 +65,7 @@
     <main>
       <div class="container my-5">
         <%if(data.length > 0){%>
-        <h1 style="text-align: center; padding: 1rem">Check orders</h1>
+        <h1 style="text-align: center; padding: 2rem">Check orders</h1>
         <div
           class="d-md-flex d-none justify-content-md-between justify-content-sm-center align-content-center border-bottom border-2 my-2 bg-dark text-light p-3 rounded-3"
         >
@@ -96,15 +96,11 @@
           <div class="col-md-3 text-sm-center align-self-center my-2">
             <h1 class="h6">Name: <%=data.user_name%></h1>
             <!-- <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1> -->
-            <h1 class="h6">
-              Address: <%=data.address%>
-            </h1>
+            <h1 class="h6">Address: <%=data.address%></h1>
           </div>
 
           <div class="col-md-4 text-sm-center align-self-center my-2">
-            <h1 class="h6">
-              <%=data.description%>
-            </h1>
+            <h1 class="h6"><%=data.description%></h1>
           </div>
 
           <div class="col-md-2 text-sm-center align-self-center my-2">
@@ -132,7 +128,9 @@
                   >
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">Order ID: TTP<%=data.id*10+123%></h5>
+                        <h5 class="modal-title">
+                          Order ID: TTP<%=data.id*10+123%>
+                        </h5>
                         <button
                           type="button"
                           class="btn-close"
@@ -144,11 +142,12 @@
                         <h6>Address: <%=data.address%></h6>
                         <hr />
                         <h6>Amount to be paid: BDT <%=data.total%></h6>
-                        <h6>Transaction ID: <%=Math.random().toString(36).substr(2)%></h6>
+                        <h6>
+                          Transaction ID:
+                          <%=Math.random().toString(36).substr(2)%>
+                        </h6>
                         <hr />
-                        <p>
-                          <%=data.description%>
-                        </p>
+                        <p><%=data.description%></p>
                         <hr />
                         <p>
                           If you confirm this supply request, the books on the
@@ -177,16 +176,17 @@
                 </div>
               </div>
             </form>
-            <%}
-            else{%>
-              <h1 class="h6 text-success">Supplied</h1>
+            <%} else{%>
+            <h1 class="h6 text-success">Supplied</h1>
             <%}%>
             <!-- <h1 class="h6 text-success">Delivered</h1> -->
           </div>
-          
         </div>
-        <%}); }%>
-
+        <%}); } else {%>
+        <h1 class="text-muted" style="text-align: center; padding: 2rem">
+          No orders placed yet
+        </h1>
+        <%}%>
       </div>
     </main>
 

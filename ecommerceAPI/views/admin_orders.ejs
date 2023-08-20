@@ -64,7 +64,9 @@
                 </a>
                 <ul class="dropdown-menu">
                   <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
-                  <li><a class="dropdown-item" href="/allOrders">Check orders</a></li>
+                  <li>
+                    <a class="dropdown-item" href="/allOrders">Check orders</a>
+                  </li>
                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 </ul>
               </li>
@@ -77,7 +79,7 @@
     <main>
       <div class="container my-5">
         <%if(data.length > 0){%>
-        <h1 style="text-align: center; padding: 1rem">Check orders</h1>
+        <h1 style="text-align: center; padding: 2rem">Check orders</h1>
         <div
           class="d-md-flex d-none justify-content-md-between justify-content-sm-center align-content-center border-bottom border-2 my-2 bg-dark text-light p-3 rounded-3"
         >
@@ -122,72 +124,83 @@
               class="d-flex justify-content-center"
             >
               <input type="hidden" name="id" value="<%=data.id%>" />
-              <input type="hidden" name="total" value="<%=data.total%>"
+              <input
+                type="hidden"
+                name="total"
+                value="<%=data.total%>"
+                <div
+                class="container"
+              />
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#<%=data.id%>"
+              >
+                Confirm
+              </button>
 
-              <div class="container">
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#<%=data.id%>"
+              <div class="modal fade" id="<%=data.id%>">
+                <div
+                  class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                 >
-                  Confirm
-                </button>
-
-                <div class="modal fade" id="<%=data.id%>">
-                  <div
-                    class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                  >
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">
-                          Order ID: TTP<%=data.id*10+123%>
-                        </h5>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                        ></button>
-                      </div>
-                      <div class="modal-body">
-                        <h6>Amount to be paid: BDT <%=data.total%></h6>
-                        <h6>
-                          Transaction ID:
-                          <%=Math.random().toString(36).substr(2)%>
-                        </h6>
-                        <p><%=data.address%></p>
-                        <p>
-                          Also <strong>BDT <%=data.total%></strong> will be
-                          deducted from your(Admin) bank account.
-                        </p>
-                      </div>
-                      <div class="modal-footer">
-                        <button
-                          type="button"
-                          class="btn btn-outline-primary"
-                          data-bs-dismiss="modal"
-                        >
-                          Close
-                        </button>
-                        <button
-                          type="submit"
-                          class="btn btn-primary"
-                          data-bs-dismiss="modal"
-                        >
-                          Proceed
-                        </button>
-                      </div>
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">
+                        Order ID: TTP<%=data.id*10+123%>
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <h6>Amount to be paid: BDT <%=data.total%></h6>
+                      <h6>
+                        Transaction ID:
+                        <%=Math.random().toString(36).substr(2)%>
+                      </h6>
+                      <p><%=data.address%></p>
+                      <p>
+                        Also <strong>BDT <%=data.total%></strong> will be
+                        deducted from your(Admin) bank account.
+                      </p>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        data-bs-dismiss="modal"
+                      >
+                        Proceed
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </form>
             <%} else{%>
-            <h1 class="h6 text-primary"><%=data.status%></h1>
+              <%if(data.status === 'Under Shipping') {%>
+                <h1 class="h6 text-primary"><%=data.status%></h1>
+              <%} else {%>
+                <h1 class="h6 text-success"><%=data.status%></h1>
+              <%}%>
             <%}%>
           </div>
         </div>
-        <%}); }%>
+        <%}); } else {%>
+        <h1 class="text-muted" style="text-align: center; padding: 2rem">
+          No orders placed yet
+        </h1>
+        <%}%>
       </div>
     </main>
 
