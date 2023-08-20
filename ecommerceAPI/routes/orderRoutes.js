@@ -91,7 +91,7 @@ router.post("/checkout", (req,res)=>{
         total,
         new Date().toLocaleString(),
         req.body.address,
-        'placed',
+        'Processing',
     ];
 
     db.query(q1, [values], (err, data)=>{

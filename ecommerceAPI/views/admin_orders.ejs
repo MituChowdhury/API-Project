@@ -17,7 +17,7 @@
     <header>
       <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top navi">
         <div class="container">
-          <a class="navbar-brand name" href="home">
+          <a class="navbar-brand name" href="#">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1em"
@@ -47,19 +47,11 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="home"
-                  >Home</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="home#mn">Books</a>
-              </li>
-              <%if(!user.isAdmin){%>
+              <!-- <%if(!user.isAdmin){%>
               <li class="nav-item">
                 <a class="nav-link" href="cart">Cart</a>
               </li>
-              <%}%>
+              <%}%> -->
               <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
@@ -68,12 +60,12 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Hi <%=user.name%>
+                  Hi <%=user.name%>(Admin)
                 </a>
                 <ul class="dropdown-menu">
                   <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
-                  <li><a class="dropdown-item" href="/allOrders">Orders</a></li>
-                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                  <li><a class="dropdown-item" href="/allOrders">Check orders</a></li>
+                  <li><a class="dropdown-item" href="/admin_login">Logout</a></li>
                 </ul>
               </li>
             </ul>
@@ -115,19 +107,15 @@
           <div class="col-md-3 text-sm-center align-self-center my-2">
             <h1 class="h6">Name: <%=data.user_name%></h1>
             <!-- <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1> -->
-            <h1 class="h6">
-              Address: <%=data.address%>
-            </h1>
+            <h1 class="h6">Address: <%=data.address%></h1>
           </div>
 
           <div class="col-md-4 text-sm-center align-self-center my-2">
-            <h1 class="h6">
-              <%=data.description%>
-            </h1>
+            <h1 class="h6"><%=data.description%></h1>
           </div>
 
           <div class="col-md-2 text-sm-center align-self-center my-2">
-            <%if(data.status==='placed'){%>
+            <%if(data.status==='Processing'){%>
             <form
               method="post"
               action="/confirmOrder"
@@ -151,7 +139,9 @@
                   >
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">Order ID: TTP<%=data.id*10+123%></h5>
+                        <h5 class="modal-title">
+                          Order ID: TTP<%=data.id*10+123%>
+                        </h5>
                         <button
                           type="button"
                           class="btn-close"
@@ -160,13 +150,14 @@
                       </div>
                       <div class="modal-body">
                         <h6>Amount to be paid: BDT <%=data.total%></h6>
-                        <h6>Transaction ID: <%=Math.random().toString(36).substr(2)%></h6>
+                        <h6>
+                          Transaction ID:
+                          <%=Math.random().toString(36).substr(2)%>
+                        </h6>
+                        <p><%=data.address%></p>
                         <p>
-                          <%=data.address%>
-                        </p>
-                        <p>
-                          Also <strong>BDT <%=data.total%></strong> will be deducted from
-                          your(Admin) bank account
+                          Also <strong>BDT <%=data.total%></strong> will be
+                          deducted from your(Admin) bank account.
                         </p>
                       </div>
                       <div class="modal-footer">
@@ -190,14 +181,12 @@
                 </div>
               </div>
             </form>
-            <%}
-            else{%>
-              <h1 class="h6 text-primary">Under Shipping</h1>
+            <%} else{%>
+            <h1 class="h6 text-primary"><%=data.status%></h1>
             <%}%>
           </div>
         </div>
         <%}); }%>
-        
       </div>
     </main>
 

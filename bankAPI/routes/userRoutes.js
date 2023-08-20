@@ -33,7 +33,8 @@ router.get("/login", (req,res)=>{
 router.post("/login", (req,res)=>{
     
     const { email, password } = req.body
-    // const hashedPassword = bcrypt.hash(password, 12)
+    const hashedPassword = bcrypt.hash(password, 12)
+
 
     const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
 

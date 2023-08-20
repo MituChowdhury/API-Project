@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geo&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Geo&display=swap");
 
 body {
   margin-top: 66px;
@@ -6,12 +6,22 @@ body {
 
 .navi {
   padding-bottom: 0;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 .name {
-  
-  font-family: 'Geo', sans-serif;
+  font-family: "Geo", sans-serif;
   font-size: 2rem;
+}
+
+.berhobo {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  border: 1px solid #ffffff;
+  border-radius: 0.2rem;
+  padding: 0.2rem 0.4rem;
 }
 
 .login {

@@ -49,7 +49,7 @@ router.post("/admin_login", (req,res)=>{
 router.get("/allOrders", (req,res)=>{
     let q = ''
     if(req.session.user && req.session.user.isAdmin) q = `SELECT * FROM orders`;
-    else q = `SELECT * FROM orders WHERE status != 'placed'`;
+    else q = `SELECT * FROM orders WHERE status != 'Processing'`;
     db.query(q, (err, data)=>{
         if(err) return res.json(err)
         else {

@@ -55,9 +55,6 @@
               <li class="nav-item">
                 <a class="nav-link" href="home#mn">Books</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="cart">Cart</a>
-              </li>
               <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
@@ -70,7 +67,8 @@
                 </a>
                 <ul class="dropdown-menu">
                   <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
-                  <li><a class="dropdown-item" href="/orders">Orders</a></li>
+                  <li><a class="dropdown-item" href="/cart">Your cart</a></li>
+                  <li><a class="dropdown-item" href="/orders">Order history</a></li>
                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 </ul>
               </li>
@@ -125,7 +123,13 @@
           </div>
 
           <div class="col-md-2 text-sm-center align-self-center my-2">
-            <h1 class="h6 text-success"><%=data.status%></h1>
+            <%if(data.status === 'Processing') {%>
+            <h1 class="h6 text-warning"><%=data.status%></h1>
+            <%} else if(data.status === 'Under Shipping') {%>
+              <h1 class="h6 text-primary"><%=data.status%></h1>
+            <%} else {%>
+              <h1 class="h6 text-success"><%=data.status%></h1>
+            <%}%>
           </div>
         </div>
         <%}); }%>
