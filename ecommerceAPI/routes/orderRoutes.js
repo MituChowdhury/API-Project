@@ -22,6 +22,7 @@ router.post('/addToCart', (req,res)=>{
     
         req.session.cart.push({
             title : title,
+            image : '/images/'+title+'.jpg',
             price : price,
             quantity : quantity,
             subtotal : subtotal
@@ -94,36 +95,55 @@ router.post("/checkout", (req,res)=>{
         'Processing',
     ];
 
-    db.query(q1, [values], (err, data)=>{
-        if(err) res.json(err)
-        else{
-            axios.post('http://localhost:3000/updateBalance', {
-                bankuid: req.body.bankuid,
-                name: req.session.user.name,
-                email: req.session.user.email,
-                password: req.body.password,
-                ammount: -total
-            })
-            .then(function (response) {
-                console.log('successful transaction from user!');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    let currentBalance = 0
 
-            axios.post('http://localhost:3000/updateBalance', {
-                email: 'admin@gmail.com',
-                ammount: total
-            })
-            .then(function (response) {
-                console.log('successful transaction to admin!');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-            res.redirect('orders')
-        }
-    })
+    axios.get(`http://localhost:3000/getBalance?email=${req.session.user.email}`)
+        .then(function (response) {
+            // handle success
+            currentBalance = parseFloat(response.data[0].ammount)
+            if(currentBalance >= total){
+                db.query(q1, [values], (err, data)=>{
+                    if(err) res.json(err)
+                    else{
+                        axios.post('http://localhost:3000/updateBalance', {
+                            bankuid: req.body.bankuid,
+                            name: req.session.user.name,
+                            email: req.session.user.email,
+                            password: req.body.password,
+                            ammount: -total
+                        })
+                        .then(function (response) {
+                            console.log('successful transaction from user!');
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+            
+                        axios.post('http://localhost:3000/updateBalance', {
+                            email: 'admin@gmail.com',
+                            ammount: total
+                        })
+                        .then(function (response) {
+                            console.log('successful transaction to admin!');
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                        res.redirect('orders')
+                    }
+                })
+            }
+            else{
+                res.json('Insufficient balance!')
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
 })
 
 module.exports = router

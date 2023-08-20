@@ -7,6 +7,8 @@ const db = require('../database');
 
 router.post("/register", (req,res)=>{
 
+    //const hashedPassword = bcrypt.hash(req.body.password, 12)
+
     const values = [
         req.body.bankuid,
         req.body.name,
@@ -35,17 +37,15 @@ router.post("/login", (req,res)=>{
     const { email, password } = req.body
     const hashedPassword = bcrypt.hash(password, 12)
 
-
     const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
 
     db.query(q, (err,data)=>{
         if(err) res.json('Wrong login credentials!')
         else{
-            const passwordMatch = bcrypt.compare(password, data[0].password);   //// hashed pass database e store korte hobe
-            console.log(passwordMatch)
+            const hashedPassword1 = bcrypt.hash(data[0].password, 12)
+            const passwordMatch = bcrypt.compare(password, data[0].password);
 
-            if(!passwordMatch) res.json('Wrong password!')
-
+            if(password !== data[0].password) res.json('Wrong password!')
             else{
                 req.session.user = data[0]
                 res.redirect('profile')
@@ -60,7 +60,6 @@ router.get("/profile", (req,res)=>{
     }
     else{
         const q = `SELECT * FROM users WHERE email = '${req.session.user.email}'`
-        console.log(q)
         db.query(q, (err,data)=>{
             if(err) console.log('error')
             else res.render('profile', {user:req.session.user, data:data[0]} )
@@ -76,16 +75,24 @@ router.get("/getUID", (req,res)=>{
     })
 })
 
+router.get("/getBalance", (req,res)=>{
+    const q = `SELECT ammount FROM users WHERE email = '${req.query.email}'`
+    db.query(q, (err,data)=>{
+        if(err) console.log('error')
+        else res.send(data)
+    })
+})
+
 router.post("/updateBalance", (req,res)=>{
-    console.log(req.body)
     const {email, ammount} = req.body
     const q = `UPDATE users SET ammount = ammount+(${ammount}) WHERE email = '${email}'`;
     console.log(q)
     db.query(q, (err,data)=>{
         if(err) console.log('error');
         else{
+            console.log(email + ' ' + ammount)
             console.log('update balance done')
-            res.send(data) /// ki pathabo update korte hobe
+            //res.send(data) 
         }
     })
 })

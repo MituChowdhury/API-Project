@@ -17,15 +17,18 @@ router.get("/login", (req,res)=>{
 router.post("/login", (req,res)=>{
     
     const { email, password } = req.body
+    const hashedPassword = bcrypt.hash(password, 12)
 
     const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
 
     db.query(q, (err,data)=>{
         if(err) res.json('Wrong login credentials!')
         else{
-            const passwordMatch = bcrypt.compare(password, data[0].password);   //// hashed pass database e store korte hobe
+            const hashedPassword1 = bcrypt.hash(data[0].password, 12)
 
-            if(!passwordMatch) res.json('Wrong password!')
+            const passwordMatch = bcrypt.compare(password, data[0].password)
+
+            if(password !== data[0].password) res.json('Wrong password!')
 
             else{
                 req.session.user = data[0]
@@ -76,6 +79,23 @@ router.post("/register", (req,res)=>{
     })
 })
 
+router.post("/bankRegister", (req,res)=>{
+    console.log(req.body)
+    axios.post('http://localhost:3000/register', {
+        bankuid: req.body.bankuid,
+        name: req.session.user.name,
+        email: req.session.user.email,
+        password: req.body.password
+      })
+      .then(function (response) {
+        console.log('success!');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    res.redirect('home')
+})
+
 router.get("/orders", (req,res)=>{
     if(!req.session.user){
         res.redirect('login')
@@ -96,9 +116,10 @@ router.get("/orders", (req,res)=>{
 })
 
 router.get("/logout", (req,res)=>{
-    console.log(req.session.cart)
+    isAdmin = req.session.user.isAdmin
     req.session.destroy();
-    res.redirect('home')
+    if(isAdmin) res.redirect('admin_login')
+    else res.redirect('home')
 })
 
 module.exports = router

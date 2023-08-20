@@ -65,7 +65,7 @@
                 <ul class="dropdown-menu">
                   <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
                   <li><a class="dropdown-item" href="/allOrders">Check orders</a></li>
-                  <li><a class="dropdown-item" href="/admin_login">Logout</a></li>
+                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 </ul>
               </li>
             </ul>
@@ -122,6 +122,7 @@
               class="d-flex justify-content-center"
             >
               <input type="hidden" name="id" value="<%=data.id%>" />
+              <input type="hidden" name="total" value="<%=data.total%>"
 
               <div class="container">
                 <button

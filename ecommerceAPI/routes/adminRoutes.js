@@ -6,40 +6,29 @@ const router = express.Router()
 
 const db = require('../database');
 
-router.post("/bankRegister", (req,res)=>{
-    axios.post('http://localhost:3000/register', {
-        bankuid: req.body.bankuid,
-        name: req.session.user.name,
-        email: req.session.user.email,
-        password: req.body.password
-      })
-      .then(function (response) {
-        console.log('success!');
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    res.redirect('home')
-})
-
 router.get("/admin_login", (req,res)=>{
-    if(req.session.user && !req.session.user.isAdmin) res.redirect('home')
-    res.render('admin_login', {user:req.session.user})
+    if(req.session.user){
+        if(!req.session.user.isAdmin) res.redirect('home')
+        else res.redirect('allOrders')
+    }
+    else res.render('admin_login', {user:req.session.user})
 })
 
 router.post("/admin_login", (req,res)=>{
+    
     if(req.session.user && !req.session.user.isAdmin) res.redirect('home')
     else{
         const { email, password } = req.body
+
         const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
 
         db.query(q, (err,data)=>{
             if(err) res.json('Wrong login credentials!')
             else{
-                if(!data[0].isAdmin) res.json('Not an admin.')
+                if((password !== data[0].password) || !data[0].isAdmin) res.json('Not an admin or wrong password!')
                 else{
                     req.session.user = data[0]
-                    res.redirect('allOrders') // edit
+                    res.redirect('allOrders') 
                 }
             }
         })
@@ -48,18 +37,24 @@ router.post("/admin_login", (req,res)=>{
 
 router.get("/allOrders", (req,res)=>{
     let q = ''
-    if(req.session.user && req.session.user.isAdmin) q = `SELECT * FROM orders`;
-    else q = `SELECT * FROM orders WHERE status != 'Processing'`;
-    db.query(q, (err, data)=>{
-        if(err) return res.json(err)
-        else {
-            if(req.session.user && req.session.user.isAdmin) res.render('admin_orders', {user: req.session.user, data:data})
-            else res.send(data)
-        } 
-    })
+    if(req.session.user && !req.session.user.isAdmin) res.redirect('home')
+    else if(req.session.user && req.session.user.isAdmin) q = `SELECT * FROM orders`;
+    else if(req.query.id) {
+        q = `SELECT * FROM orders WHERE status != 'Processing'`;
+        db.query(q, (err, data)=>{
+            if(err) return res.json(err)
+            else {
+                if(req.session.user && req.session.user.isAdmin) res.render('admin_orders', {user: req.session.user, data:data})
+                else res.send(data)
+            } 
+        })
+    }
+    else res.json('Page not found')
 })
 
 router.post('/confirmOrder', (req,res)=>{
+    console.log('order of : ' + req.body.id)
+    console.log('total : ' + req.body.total)
     axios.post('http://localhost:3000/updateBalance', {
         email: 'admin@gmail.com',
         ammount: -req.body.total
@@ -81,13 +76,14 @@ router.post('/confirmOrder', (req,res)=>{
     .catch(function (error) {
         console.log(error);
     });
-    
+        
     const q = `UPDATE orders SET status = 'Under Shipping' WHERE id = ${req.body.id}`
     console.log(q)
     db.query(q, (err, data)=>{
         if(err) return res.json(err)
         else res.redirect('allOrders')
     })
+
 })
 
 router.post('/changeOrderStatus', (req,res)=>{
