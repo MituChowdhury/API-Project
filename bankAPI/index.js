@@ -1,20 +1,11 @@
-import express from "express"
-import mysql from "mysql"
-import bodyparser from "body-parser"
-import session from "express-session"
-import bcrypt from "bcryptjs"
-import axios from 'axios'
+const express = require('express')
+const bodyparser = require('body-parser')
+const session = require('express-session')
 
+const userRoutes = require('./routes/userRoutes')
+const homeRoutes = require('./routes/homeRoutes')
 
 const app = express()
-
-// database connection
-const db = mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"ithinkiseeu5020",
-    database:"bank"
-})
 
 app.use(express.json())
 
@@ -29,95 +20,12 @@ app.use(session({
 	saveUninitialized : false,
 }));
 
+app.use(userRoutes)
+app.use(homeRoutes)
 
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-
-app.get("/", (req,res)=>{
-    res.json("hello this is bank backend :)")
-})
-
-app.post("/register", (req,res)=>{
-
-    const values = [
-        req.body.bankuid,
-        req.body.name,
-        req.body.email,
-        req.body.password
-    ]
-
-    const q = 'INSERT INTO users (bankuid, name, email, password) VALUES (?)'
-    
-    db.query(q, [values], (err,data)=>{
-        if(err) res.json(err)
-        else res.json('account creation successful')
-    })
-})
-
-app.get("/login", (req,res)=>{
-    if(req.session.user){
-        res.redirect('profile')
-    }
-    else{
-        res.redirect('login')
-    }
-})
-
-app.post("/login", (req,res)=>{
-    
-    const { email, password } = req.body
-    const hashedPassword = bcrypt.hash(password, 12)
-
-    const q = `SELECT * FROM users WHERE email = ${email} AND password = ${password}`
-
-    db.query(q, (err,data)=>{
-        if(err) res.json('Wrong login credentials!')
-        else{
-            const hashedPassword1 = bcrypt.hash(data[0].password, 12)
-            if(hashedPassword === hashedPassword1){
-                req.session.user = data[0]
-                res.redirect('profile')
-            }
-            else res.json('Wrong password!')
-        }
-    })
-})
-
-app.get("/profile", (req,res)=>{
-    if(!req.session.user){
-        res.redirect('login')
-    }
-    else{
-        const q = `SELECT * FROM users WHERE email = '${req.session.user.email}'`
-        db.query(q, (err,data)=>{
-            if(err) console.log('error')
-            else res.render('profile', {user:req.session.user, data:data} )
-        })
-    }
-})
-
-app.get("/getUID", (req,res)=>{
-    const q = `SELECT bankuid FROM users WHERE email = '${req.query.email}'`
-    db.query(q, (err,data)=>{
-        if(err) console.log('error')
-        else res.send(data)
-    })
-})
-
-app.post("/updateBalance", (req,res)=>{
-    console.log(req.body)
-    const {email, ammount} = req.body
-    const q = `UPDATE users SET ammount = ammount+(${ammount}) WHERE email = '${email}'`;
-    console.log(q)
-    db.query(q, (err,data)=>{
-        if(err) console.log('error');
-        else{
-            console.log('update balance done')
-            res.send(data) /// ki pathabo update korte hobe
-        }
-    })
-})
 
 app.listen(3000, ()=>{
     console.log("Connected to bank backend!")

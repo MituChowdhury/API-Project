@@ -17,7 +17,7 @@
     <header>
       <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top navi">
         <div class="container">
-          <a class="navbar-brand name" href="index.html">
+          <a class="navbar-brand name" href="home">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1em"
@@ -48,15 +48,15 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="index.html"
+                <a class="nav-link" aria-current="page" href="home"
                   >Home</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="index.html#mn">Books</a>
+                <a class="nav-link" href="home#mn">Books</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="cart.html">Cart</a>
+                <a class="nav-link" href="cart">Cart</a>
               </li>
               <li class="nav-item dropdown">
                 <a
@@ -66,10 +66,10 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Hi Tomotu!
+                  Hi <%=user.name%>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
                   <li><a class="dropdown-item" href="/orders">Orders</a></li>
                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 </ul>
@@ -82,6 +82,7 @@
 
     <main>
       <div class="container my-5">
+        <%if(data.length > 0){%>
         <h1 style="text-align: center; padding: 1rem">My order history</h1>
         <div
           class="d-md-flex d-none justify-content-md-between justify-content-sm-center align-content-center border-bottom border-2 my-2 bg-dark text-light p-3 rounded-3"
@@ -99,92 +100,36 @@
             <h1 class="h5 fw-bold text-center">Order Status</h1>
           </div>
         </div>
+        <%data.forEach(function(data){%>
         <div
           class="d-md-flex d-sm-block justify-content-md-between justify-content-sm-center text-center border-bottom border-2 my-2 bg-light p-2 rounded-3"
         >
           <div class="col-md-3 text-sm-center align-self-center my-2">
-            <h1 class="h6">Order ID: 2F456DA</h1>
-            <h1 class="h6">Date: 19/08/2023</h1>
-            <h1 class="h6">Order Amount: BDT 5000</h1>
+            <h1 class="h6">Order ID: TTP<%=data.id*10+123%></h1>
+            <h1 class="h6">Date: <%=data.createdAt%></h1>
+            <h1 class="h6">Order Amount: BDT <%=data.total%></h1>
           </div>
 
           <div class="col-md-3 text-sm-center align-self-center my-2">
-            <h1 class="h6">Name: Mitu Chowdhury</h1>
-            <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1>
+            <h1 class="h6">Name: <%=data.user_name%></h1>
+            <!-- <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1> -->
             <h1 class="h6">
-              Address: First Ladies Hall, SUST, Akhalia, Sylhet
+              Address: <%=data.address%>
             </h1>
           </div>
 
           <div class="col-md-4 text-sm-center align-self-center my-2">
             <h1 class="h6">
-              1 x Doctor Jekyll and Mr. Hyde, 2 x Harry Potter and the Half
-              Blood Prince, 3 x Rita Hayworth and Shawshank Redemption
+              <%=data.description%>
             </h1>
           </div>
 
           <div class="col-md-2 text-sm-center align-self-center my-2">
-            <h1 class="h6 text-success">Delivered</h1>
+            <h1 class="h6 text-success"><%=data.status%></h1>
           </div>
         </div>
+        <%}); }%>
 
-        <div
-          class="d-md-flex d-sm-block justify-content-md-between justify-content-sm-center text-center border-bottom border-2 my-2 bg-light p-2 rounded-3"
-        >
-          <div class="col-md-3 text-sm-center align-self-center my-2">
-            <h1 class="h6">Order ID: 2F456DA</h1>
-            <h1 class="h6">Date: 19/08/2023</h1>
-            <h1 class="h6">Order Amount: BDT 5000</h1>
-          </div>
-
-          <div class="col-md-3 text-sm-center align-self-center my-2">
-            <h1 class="h6">Name: Mitu Chowdhury</h1>
-            <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1>
-            <h1 class="h6">
-              Address: First Ladies Hall, SUST, Akhalia, Sylhet
-            </h1>
-          </div>
-
-          <div class="col-md-4 text-sm-center align-self-center my-2">
-            <h1 class="h6">
-              1 x Doctor Jekyll and Mr. Hyde, 2 x Harry Potter and the Half
-              Blood Prince, 3 x Rita Hayworth and Shawshank Redemption
-            </h1>
-          </div>
-
-          <div class="col-md-2 text-sm-center align-self-center my-2">
-            <h1 class="h6 text-primary">Under shipping</h1>
-          </div>
-        </div>
-
-        <div
-          class="d-md-flex d-sm-block justify-content-md-between justify-content-sm-center text-center border-bottom border-2 my-2 bg-light p-2 rounded-3"
-        >
-          <div class="col-md-3 text-sm-center align-self-center my-2">
-            <h1 class="h6">Order ID: 2F456DA</h1>
-            <h1 class="h6">Date: 19/08/2023</h1>
-            <h1 class="h6">Order Amount: BDT 5000</h1>
-          </div>
-
-          <div class="col-md-3 text-sm-center align-self-center my-2">
-            <h1 class="h6">Name: Mitu Chowdhury</h1>
-            <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1>
-            <h1 class="h6">
-              Address: First Ladies Hall, SUST, Akhalia, Sylhet
-            </h1>
-          </div>
-
-          <div class="col-md-4 text-sm-center align-self-center my-2">
-            <h1 class="h6">
-              1 x Doctor Jekyll and Mr. Hyde, 2 x Harry Potter and the Half
-              Blood Prince, 3 x Rita Hayworth and Shawshank Redemption
-            </h1>
-          </div>
-
-          <div class="col-md-2 text-sm-center align-self-center my-2">
-            <h1 class="h6 text-warning">Processing</h1>
-          </div>
-        </div>
       </div>
     </main>
 
