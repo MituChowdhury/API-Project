@@ -20,9 +20,9 @@ router.post("/login", (req,res)=>{
     const hashedPassword = bcrypt.hash(password, 12)
 
     const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
-
+    console.log(q)
     db.query(q, (err,data)=>{
-        if(err) res.json('Wrong login credentials!')
+        if(err || data.length === 0) res.json('Wrong login credentials!')
         else{
             const hashedPassword1 = bcrypt.hash(data[0].password, 12)
 

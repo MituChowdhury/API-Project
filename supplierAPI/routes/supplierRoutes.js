@@ -23,7 +23,7 @@ router.post("/login", (req,res)=>{
 
 router.get("/allOrders", (req,res)=>{
 
-    axios.get(`http://localhost:3001/allOrders?`)
+    axios.get(`http://localhost:3001/allOrders?id=supplier`)
     .then(function (response) {
         // handle success
         res.render('orders', {user:req.session.user, data:response.data})

@@ -23,7 +23,7 @@ router.post("/admin_login", (req,res)=>{
         const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
 
         db.query(q, (err,data)=>{
-            if(err) res.json('Wrong login credentials!')
+            if(err || data.length === 0) res.json('Wrong login credentials!')
             else{
                 if((password !== data[0].password) || !data[0].isAdmin) res.json('Not an admin or wrong password!')
                 else{
@@ -36,25 +36,25 @@ router.post("/admin_login", (req,res)=>{
 })
 
 router.get("/allOrders", (req,res)=>{
-    let q = ''
     if(req.session.user && !req.session.user.isAdmin) res.redirect('home')
-    else if(req.session.user && req.session.user.isAdmin) q = `SELECT * FROM orders`;
-    else if(req.query.id) {
-        q = `SELECT * FROM orders WHERE status != 'Processing'`;
+    else if(req.session.user && req.session.user.isAdmin){
+        const q = `SELECT * FROM orders`;
         db.query(q, (err, data)=>{
             if(err) return res.json(err)
-            else {
-                if(req.session.user && req.session.user.isAdmin) res.render('admin_orders', {user: req.session.user, data:data})
-                else res.send(data)
-            } 
+            else res.render('admin_orders', {user: req.session.user, data:data})
+        })
+    }
+    else if(req.query.id) {
+        const q = `SELECT * FROM orders WHERE status != 'Processing'`;
+        db.query(q, (err, data)=>{
+            if(err) return res.json(err)
+            else res.send(data)
         })
     }
     else res.json('Page not found')
 })
 
 router.post('/confirmOrder', (req,res)=>{
-    console.log('order of : ' + req.body.id)
-    console.log('total : ' + req.body.total)
     axios.post('http://localhost:3000/updateBalance', {
         email: 'admin@gmail.com',
         ammount: -req.body.total
@@ -78,7 +78,6 @@ router.post('/confirmOrder', (req,res)=>{
     });
         
     const q = `UPDATE orders SET status = 'Under Shipping' WHERE id = ${req.body.id}`
-    console.log(q)
     db.query(q, (err, data)=>{
         if(err) return res.json(err)
         else res.redirect('allOrders')

@@ -17,11 +17,12 @@ router.post('/addToCart', (req,res)=>{
         if(!req.session.cart){
             req.session.cart = []
         }
-        const {title, price, quantity} = req.body
+        const {title, author, price, quantity} = req.body
         const subtotal = parseFloat(price) * parseInt(quantity)
     
         req.session.cart.push({
             title : title,
+            author : author,
             image : '/images/'+title+'.jpg',
             price : price,
             quantity : quantity,
@@ -47,13 +48,13 @@ router.post("/changeQuantity", (req,res)=>{
 
         for(let i=0;i<req.session.cart.length;i++) {
 
-            if(req.session.cart[i].title === req.body.title) {
+            if(req.session.cart[i].title === req.body.title) {  // product id is better than title
                 if(req.body.op === 'decrease' && req.session.cart[i].quantity>1) {
                     req.session.cart[i].quantity--
                     req.session.cart[i].subtotal = parseInt(req.session.cart[i].subtotal) - parseInt(req.session.cart[i].price)
                     break;
                 }
-                else{
+                else if(req.body.op === 'increase') {
                     req.session.cart[i].quantity++
                     req.session.cart[i].subtotal = parseInt(req.session.cart[i].subtotal) + parseInt(req.session.cart[i].price)
                     break;
@@ -62,6 +63,16 @@ router.post("/changeQuantity", (req,res)=>{
          }
          res.render('cart', {user:req.session.user, cart:req.session.cart})
     }
+})
+
+router.post("/removeItem", (req,res)=>{
+    const index = req.session.cart.findIndex(object => {
+        return object.title === req.body.title;   // product id is better than title
+      });
+    if (index > -1) { // only splice array when item is found
+        req.session.cart.splice(index, 1); // 2nd parameter means remove one item only
+    }
+    res.render('cart', {user:req.session.user, cart:req.session.cart})
 })
 
 router.post("/checkout", (req,res)=>{
