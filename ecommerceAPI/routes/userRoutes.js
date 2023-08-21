@@ -15,40 +15,41 @@ router.get("/login", (req,res)=>{
 })
 
 router.post("/login", (req,res)=>{
-    
+
     const { email, password } = req.body
-    const hashedPassword = bcrypt.hash(password, 12)
 
-    const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
-    console.log(q)
+    const q = `SELECT * FROM users WHERE email = '${email}'`
+
     db.query(q, (err,data)=>{
-        if(err || data.length === 0) res.json('Wrong login credentials!')
+        if(err || data.length === 0) res.json('No such user exists!')
         else{
-            const hashedPassword1 = bcrypt.hash(data[0].password, 12)
+            const actualPassword = data[0].password
+            // generate a hash and checking
+            bcrypt.hash(actualPassword, 10, function(err, hash) {
+                bcrypt.compare(password, hash, function(err, matches) {
+                    console.log(matches);
+                    if(matches){
+                        req.session.user = data[0]
 
-            const passwordMatch = bcrypt.compare(password, data[0].password)
+                        axios.get(`http://localhost:3000/getUID?email=${email}`)
+                        .then(function (response) {
+                            // handle success
+                            req.session.user.uid = response.data
+                            console.log(response.data);
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        })
+                        .finally(function () {
+                            // always executed
+                        });
 
-            if(password !== data[0].password) res.json('Wrong password!')
-
-            else{
-                req.session.user = data[0]
-
-                axios.get(`http://localhost:3000/getUID?email=${email}`)
-                .then(function (response) {
-                    // handle success
-                    req.session.user.uid = response.data
-                    console.log(response.data);
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                })
-                .finally(function () {
-                    // always executed
+                        res.redirect('home')
+                    }
+                    else res.json('Wrong password!')
                 });
-
-                res.redirect('home')
-            }
+            });
         }
     })
 })

@@ -18,17 +18,28 @@ router.post("/admin_login", (req,res)=>{
     
     if(req.session.user && !req.session.user.isAdmin) res.redirect('home')
     else{
+
         const { email, password } = req.body
 
-        const q = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`
+        const q = `SELECT * FROM users WHERE email = '${email}'`
 
         db.query(q, (err,data)=>{
-            if(err || data.length === 0) res.json('Wrong login credentials!')
+            if(err || data.length === 0) res.json('No such user exists!')
             else{
-                if((password !== data[0].password) || !data[0].isAdmin) res.json('Not an admin or wrong password!')
+                if(!data[0].isAdmin) res.json('Not an admin!')
                 else{
-                    req.session.user = data[0]
-                    res.redirect('allOrders') 
+                    const actualPassword = data[0].password
+                    // generate a hash and checking
+                    bcrypt.hash(actualPassword, 10, function(err, hash) {
+                        bcrypt.compare(password, hash, function(err, matches) {
+                            console.log(matches);
+                            if(matches){
+                                req.session.user = data[0]
+                                res.redirect('allOrders') 
+                            }
+                            else res.json('Wrong password!')
+                        });
+                    });
                 }
             }
         })

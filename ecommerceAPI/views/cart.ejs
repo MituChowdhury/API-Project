@@ -105,7 +105,7 @@
                           <p class="mb-0">Book(s) in your cart</p>
                         </div>
                       </div>
-                      <%if(cart){ cart.forEach(function(cart){ total +=
+                      <%if(cart && cart.length>0){ cart.forEach(function(cart){ total +=
                       cart.subtotal%>
                       <div class="card mb-3">
                         <div class="card-body">
@@ -237,7 +237,7 @@
                       </h1>
                       <%}%>
                     </div>
-                    <%if(cart){%>
+                    <%if(cart && cart.length>0){%>
                     <div class="col-lg-5">
                       <div class="card bg-dark rounded-3">
                         <div class="card-body">
