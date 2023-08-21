@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Check orders</title>
+    <title>Check orders (Admin)</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -34,44 +34,29 @@
             </svg>
             TURN THE PAGE
           </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <!-- <%if(!user.isAdmin){%>
-              <li class="nav-item">
-                <a class="nav-link" href="cart">Cart</a>
-              </li>
-              <%}%> -->
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link berhobo" href="/logout">
+                <span>Logout</span>
+                <svg
+                  class="lout"
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 512 512"
                 >
-                  Hi <%=user.name%>(Admin)
-                </a>
-                <ul class="dropdown-menu">
-                  <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
-                  <li>
-                    <a class="dropdown-item" href="/allOrders">Check orders</a>
-                  </li>
-                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+                  <style>
+                    svg.lout {
+                      fill: #ffffff;
+                      margin-bottom: 0.25rem;
+                    }
+                  </style>
+                  <path
+                    d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"
+                  />
+                </svg>
+              </a>
+            </li>
+          </ul>
         </div>
       </nav>
     </header>
@@ -108,7 +93,6 @@
 
           <div class="col-md-3 text-sm-center align-self-center my-2">
             <h1 class="h6">Name: <%=data.user_name%></h1>
-            <!-- <h1 class="h6">Email: chowdhurymitu05@gmail.com</h1> -->
             <h1 class="h6">Address: <%=data.address%></h1>
           </div>
 
@@ -187,13 +171,11 @@
                 </div>
               </div>
             </form>
-            <%} else{%>
-              <%if(data.status === 'Under Shipping') {%>
-                <h1 class="h6 text-primary"><%=data.status%></h1>
-              <%} else {%>
-                <h1 class="h6 text-success"><%=data.status%></h1>
-              <%}%>
-            <%}%>
+            <%} else{%> <%if(data.status === 'Under Shipping') {%>
+            <h1 class="h6 text-primary"><%=data.status%></h1>
+            <%} else {%>
+            <h1 class="h6 text-success"><%=data.status%></h1>
+            <%}%> <%}%>
           </div>
         </div>
         <%}); } else {%>

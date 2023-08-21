@@ -55,6 +55,15 @@ body {
   margin-left: auto;
 }
 
+.berhobo {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  border: 1px solid #ffffff;
+  border-radius: 0.2rem;
+  padding: 0.2rem 0.4rem;
+}
+
 .login {
   height: 90vh;
   display: flex;

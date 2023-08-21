@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cart</title>
+    <title>Your cart</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -64,7 +64,6 @@
                   Hi <%-user.name%>!
                 </a>
                 <ul class="dropdown-menu">
-                  <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
                   <li><a class="dropdown-item" href="/cart">Your cart</a></li>
                   <li>
                     <a class="dropdown-item" href="/orders">Order history</a>
@@ -105,18 +104,15 @@
                           <p class="mb-0">Book(s) in your cart</p>
                         </div>
                       </div>
-                      <%if(cart && cart.length>0){ cart.forEach(function(cart){ total +=
-                      cart.subtotal%>
+                      <%if(cart && cart.length>0){ cart.forEach(function(cart){
+                      total += cart.subtotal%>
                       <div class="card mb-3">
                         <div class="card-body">
                           <div class="d-flex justify-content-between">
                             <div class="d-flex flex-row align-items-center">
                               <div>
-                                <img
-                                  src="<%=cart.image%>""
-                                  class="img-fluid rounded"
-                                  alt="Shopping item"
-                                  style="width: 50px"
+                                <img src="<%=cart.image%>"" class="img-fluid
+                                rounded" alt="Shopping item" style="width: 50px"
                                 />
                               </div>
                               <div class="ms-3">
@@ -198,14 +194,11 @@
                               </div>
                               <form action="/removeItem" method="post">
                                 <input
-                                    type="hidden"
-                                    name="title"
-                                    value="<%=cart.title%>"
-                                  />
-                                <button
-                                    type="submit"
-                                    class="btn btn-link px-2"
-                                  >
+                                  type="hidden"
+                                  name="title"
+                                  value="<%=cart.title%>"
+                                />
+                                <button type="submit" class="btn btn-link px-2">
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     height="1em"
@@ -250,7 +243,7 @@
                             <img
                               src="/images/gravatar.jpg"
                               class="img-fluid"
-                              style="width: 45px; border-radius: 50%;"
+                              style="width: 45px; border-radius: 50%"
                               alt="Avatar"
                             />
                           </div>
