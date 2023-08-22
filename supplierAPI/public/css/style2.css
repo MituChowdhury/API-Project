@@ -4,6 +4,20 @@ body {
   margin-top: 66px;
 }
 
+#ld {
+  background-color: #ffffff;
+  width: 100%;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  z-index: 1050;
+}
+
+.threedots {
+  margin: 0.25rem;
+  scale: 0.75;
+}
+
 .navi {
   padding-bottom: 0;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,

@@ -43,6 +43,30 @@
       <div class="login">
         <form action="/login" method="post" novalidate>
           <h3>Login</h3>
+          <%if(errormsg.length > 0) {%>
+          <div
+            class="toast align-items-center text-bg-danger border-0 fade show"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+            style="position: absolute; bottom: 25px; right: 25px"
+          >
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="toast-body d-flex align-items-center">
+                <span style="font-size: 1rem"><%=errormsg%></span>
+              </div>
+              <div style="padding: 1rem">
+                <button
+                  type="button"
+                  class="btn-close btn-close-white me-2 m-auto"
+                  data-bs-dismiss="toast"
+                  aria-label="Close"
+                  style="scale: 1.2"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <%}%>
           <div class="form-floating mb-3 inp">
             <input
               type="email"
