@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Bangers&display=swap");
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin-top: 66px;
 }
@@ -122,4 +128,10 @@ body {
 .login form p a {
   text-decoration: none;
   font-weight: bold;
+}
+
+.show {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
 }

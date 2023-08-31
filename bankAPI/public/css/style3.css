@@ -1,11 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap");
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin-top: 66px;
 }
 
 .navi {
-  background-color: #ffa700;
+  background: rgb(8, 38, 90);
+  background: linear-gradient(
+    90deg,
+    rgba(8, 38, 90, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
   padding-bottom: 0;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
@@ -14,15 +25,6 @@ body {
 .name {
   font-family: "Kelly Slab", cursive;
   font-size: 2rem;
-}
-
-.holud {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.2rem;
-  border: 1px solid #ffffff;
-  border-radius: 0.2rem;
-  padding: 0.2rem 0.4rem;
 }
 
 .login {
@@ -53,16 +55,35 @@ body {
   margin: 1rem auto;
 }
 
+.show {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+}
+
+.berobo {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  border: 1px solid #ffffff;
+  border-radius: 0.2rem;
+  padding: 0.2rem 0.4rem;
+}
+
 .gradient-custom {
-  background: #f6d365;
-  /* Chrome 10-25, Safari 5.1-6 */
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  background: rgb(8, 38, 90);
   background: -webkit-linear-gradient(
     to right bottom,
-    rgba(246, 211, 101, 1),
-    rgba(253, 160, 133, 1)
+    rgba(8, 38, 90, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
   );
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  background: linear-gradient(to right bottom, #ffd700, #ff8c00);
+  background: linear-gradient(
+    to right bottom,
+    rgba(8, 38, 90, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
 }
 
 .uprofile {
